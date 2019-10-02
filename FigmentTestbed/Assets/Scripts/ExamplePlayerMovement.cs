@@ -8,6 +8,10 @@ public class ExamplePlayerMovement : MonoBehaviour {
     public float TurnSpeed = 120.0f;
     public float MoveSpeed = 8.0f;
 
+    private bool gameWin = false;
+
+    public Image Crosshair;
+
     public Image ConversationPanel;
     public Text ConversationSpeaker;
     public Text ConversationText;
@@ -65,96 +69,103 @@ public class ExamplePlayerMovement : MonoBehaviour {
     // Update is called once per frame
     void Update () {
         //INTERACTION WITH NPCS/ITEMS
-        if (!isTalking)
+        if (!gameWin)
         {
-            if (FigmentInput.GetButton(FigmentInput.FigmentButton.LeftButton))
+            if (!isTalking)
             {
-                transform.Rotate(Vector3.up, -TurnSpeed * Time.deltaTime);
-            }
-            else if (FigmentInput.GetButton(FigmentInput.FigmentButton.RightButton))
-            {
-                transform.Rotate(Vector3.up, TurnSpeed * Time.deltaTime);
-            }
-
-            if (FigmentInput.GetButtonDown(FigmentInput.FigmentButton.ActionButton))
-            {
-                Shoot();
-            }
-    }
-        else if (isTalking)
-        {
-            if (isTalkingD)
-            {
-                Debug.Log(Selection);
-                if (FigmentInput.GetButtonDown(FigmentInput.FigmentButton.LeftButton))
+                
+                if (FigmentInput.GetButton(FigmentInput.FigmentButton.LeftButton))
                 {
-                    if (Selection > 0)
-                    {
-                        Selection--;
-                    }
+                    transform.Rotate(Vector3.up, -TurnSpeed * Time.deltaTime);
                 }
-                else if (FigmentInput.GetButtonDown(FigmentInput.FigmentButton.RightButton))
+                else if (FigmentInput.GetButton(FigmentInput.FigmentButton.RightButton))
                 {
-                    if (Selection < 3)
-                    {
-                        Selection++;
-                    }
+                    transform.Rotate(Vector3.up, TurnSpeed * Time.deltaTime);
                 }
 
-                //cursor Movement
-                switch (Selection)
-                {
-                    case 0:
-                        DisableCursor();
-                        Cursor1.enabled = true;
-                        break;
-                    case 1:
-                        DisableCursor();
-                        Cursor2.enabled = true;
-                        break;
-                    case 2:
-                        DisableCursor();
-                        Cursor3.enabled = true;
-                        break;
-                    case 3:
-                        DisableCursor();
-                        Cursor4.enabled = true;
-                        break;
-                }
-
-                //Action Button while talking to the detective
                 if (FigmentInput.GetButtonDown(FigmentInput.FigmentButton.ActionButton))
                 {
+                    Shoot();
+                }
+            }
+            else if (isTalking)
+            {
+                Crosshair.enabled = false;
+                if (isTalkingD)
+                {
+                    Debug.Log(Selection);
+                    if (FigmentInput.GetButtonDown(FigmentInput.FigmentButton.LeftButton))
+                    {
+                        if (Selection > 0)
+                        {
+                            Selection--;
+                        }
+                    }
+                    else if (FigmentInput.GetButtonDown(FigmentInput.FigmentButton.RightButton))
+                    {
+                        if (Selection < 3)
+                        {
+                            Selection++;
+                        }
+                    }
+
+                    //cursor Movement
                     switch (Selection)
                     {
                         case 0:
-                            DisableUI();
+                            DisableCursor();
+                            Cursor1.enabled = true;
                             break;
                         case 1:
-                            QuitGame();
+                            DisableCursor();
+                            Cursor2.enabled = true;
                             break;
                         case 2:
-                            QuitGame();
+                            DisableCursor();
+                            Cursor3.enabled = true;
                             break;
                         case 3:
-                            WinGame();
+                            DisableCursor();
+                            Cursor4.enabled = true;
                             break;
-
-
                     }
 
+                    //Action Button while talking to the detective
+                    if (FigmentInput.GetButtonDown(FigmentInput.FigmentButton.ActionButton))
+                    {
+                        switch (Selection)
+                        {
+                            case 0:
+                                DisableUI();
+                                Crosshair.enabled = true;
+                                break;
+                            case 1:
+                                QuitGame();
+                                break;
+                            case 2:
+                                QuitGame();
+                                break;
+                            case 3:
+                                WinGame();
+                                break;
+                        }
+                    }
                 }
-            }
-            else
-            {
-                if (FigmentInput.GetButtonDown(FigmentInput.FigmentButton.ActionButton))
+                else
                 {
-                    DisableUI();
+                    if (FigmentInput.GetButtonDown(FigmentInput.FigmentButton.ActionButton))
+                    {
+                        DisableUI();
+                        Crosshair.enabled = true;
+                    }
                 }
+
             }
+            
         }
-        
-    }
+            
+     }
+       
 
     //shoots out raycast from camera if it hits something that can be interacted with starts interaction
     void Shoot ()
@@ -219,6 +230,8 @@ public class ExamplePlayerMovement : MonoBehaviour {
     {
         DisableUI();
 
+        gameWin = true;
+
         GameVictory.enabled = true;
         GameVictoryText.enabled = true;
     }
@@ -241,6 +254,8 @@ public class ExamplePlayerMovement : MonoBehaviour {
         Cursor2.enabled = false;
         Cursor3.enabled = false;
         Cursor4.enabled = false;
+
+        Crosshair.enabled = false;
     }
 
     //DISABLES CURSOR

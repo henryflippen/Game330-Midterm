@@ -9,6 +9,8 @@ public class Target : MonoBehaviour
     
     public string Quote = "";
     public string Speaker = "";
+    public string ObjectName = "";
+    public string ObjectDescription = "";
     //public float health = 10f;
 
     

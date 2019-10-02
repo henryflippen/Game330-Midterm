@@ -16,6 +16,10 @@ public class ExamplePlayerMovement : MonoBehaviour {
     public Text ConversationSpeaker;
     public Text ConversationText;
 
+    public Image InfoPanel;
+    public Text InfoText;
+    public Text InfoName;
+
     public Image DetectivePanel;
     public Text Accuse1;
     public Text Accuse2;
@@ -44,6 +48,10 @@ public class ExamplePlayerMovement : MonoBehaviour {
 
     public void Start()
     {
+        InfoPanel.enabled = false;
+        InfoText.enabled = false;
+        InfoName.enabled = false;
+
         ConversationPanel.enabled = false;
         ConversationSpeaker.enabled = false;
         ConversationText.enabled = false;
@@ -69,6 +77,7 @@ public class ExamplePlayerMovement : MonoBehaviour {
     // Update is called once per frame
     void Update () {
         //INTERACTION WITH NPCS/ITEMS
+
         if (!gameWin)
         {
             if (!isTalking)
@@ -90,6 +99,11 @@ public class ExamplePlayerMovement : MonoBehaviour {
             }
             else if (isTalking)
             {
+                //disables info panel when talking figure out a way to not do it this way because this is garbage
+                InfoPanel.enabled = false;
+                InfoText.enabled = false;
+                InfoName.enabled = false;
+                //
                 Crosshair.enabled = false;
                 if (isTalkingD)
                 {
@@ -182,9 +196,7 @@ public class ExamplePlayerMovement : MonoBehaviour {
                 if (target.Suspect)
                 {
                     Debug.Log(target.Quote);
-                    ConversationPanel.enabled = true;
-                    ConversationSpeaker.enabled = true;
-                    ConversationText.enabled = true;
+                    EnableConvoUI();
 
                     ConversationSpeaker.text = target.Speaker;
                     ConversationText.text = target.Quote;
@@ -193,9 +205,7 @@ public class ExamplePlayerMovement : MonoBehaviour {
                 {
                     isTalkingD = true;
                     Debug.Log(target.Quote);
-                    ConversationPanel.enabled = true;
-                    ConversationSpeaker.enabled = true;
-                    ConversationText.enabled = true;
+                    EnableConvoUI();
 
                     DetectivePanel.enabled = true;
                     Accuse1.enabled = true;
@@ -211,7 +221,6 @@ public class ExamplePlayerMovement : MonoBehaviour {
                 isTalking = true;
             }
         }
-
     }
 
     //QUITS GAME FOR GAME OVER
@@ -256,6 +265,15 @@ public class ExamplePlayerMovement : MonoBehaviour {
         Cursor4.enabled = false;
 
         Crosshair.enabled = false;
+    }
+
+    void EnableConvoUI()
+    {
+        
+
+        ConversationPanel.enabled = true;
+        ConversationSpeaker.enabled = true;
+        ConversationText.enabled = true;
     }
 
     //DISABLES CURSOR
